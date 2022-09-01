@@ -7,8 +7,8 @@
 [![Latest Release](https://img.shields.io/github/v/release/LorenzoDrudi/clean-up-cloud-rogue-instances?color=%233D9970)](https://img.shields.io/github/v/release/LorenzoDrudi/clean-up-cloud-rogue-instances?color=%233D9970)
 
 JavaScript Github Action to clean up AWS running instances linked to Github Runners on a specified repository. \
-To identify the instances is used a tag with a specific pattern: `'${REPO_NAME} Github Runner'`. The action will terminate every running instance in the specified region with this tag. \
-It works perfectly with the runners deployed with [ephemeral-github-runner](https://github.com/pavlovic-ivan/ephemeral-github-runner) (see also the related [action](https://github.com/LorenzoDrudi/ephemeral-github-runner-action)).  
+To identify the instances a tag with a specific pattern: `'${REPO_NAME} Github Runner'` is used. The action will terminate every running instance in the specified region with that tag. \
+It works perfectly with the runners deployed using [ephemeral-github-runner](https://github.com/pavlovic-ivan/ephemeral-github-runner) (see also the related [github action](https://github.com/LorenzoDrudi/ephemeral-github-runner-action)).  
 
 1. [Prerequisites](#prerequisites)
 2. [Explanation](#inputs)
@@ -22,15 +22,15 @@ It works perfectly with the runners deployed with [ephemeral-github-runner](http
 
 ## Inputs
 
-Everything below is required. There are no default values provided.
+Everything below is required.
 
-- `repo-name`: The name of the repository for which you want to clean up offline runners
-- `aws-region`: AWS region where the instances are located, eg. eu-west-2
+- `repo-name`: The name of the repository for which you want to clean up offline runners.
+- `aws-region`: AWS region where the instances are located. Default value: eu-west-2.
 
 ## Environment Variables
 
-- `AWS_ACCESS_KEY_ID`: Your access key id received when account was created
-- `AWS_SECRET_ACCESS_KEY`: Your secret access key received when account was created
+- `AWS_ACCESS_KEY_ID`: Your access key id received when account was created.
+- `AWS_SECRET_ACCESS_KEY`: Your secret access key received when account was created.
 
 ## Example Usage 
 
@@ -41,7 +41,7 @@ jobs:
     manage-runners:
         runs-on: ubuntu-latest
         steps:
-          - uses: LorenzoDrudi/clean-up-cloud-rogue-instances@develop
+          - uses: LorenzoDrudi/clean-up-cloud-rogue-instances@<version to use>
             env:
               AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
               AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
