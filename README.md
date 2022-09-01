@@ -7,7 +7,8 @@
 [![Latest Release](https://img.shields.io/github/v/release/LorenzoDrudi/clean-up-cloud-rogue-instances?color=%233D9970)](https://img.shields.io/github/v/release/LorenzoDrudi/clean-up-cloud-rogue-instances?color=%233D9970)
 
 JavaScript Github Action to clean up AWS running instances linked to Github Runners on a specified repository. \
-To identify the instances a tag with a specific pattern: `'${REPO_NAME} Github Runner'` is used. \ The action will terminate every running instance in the specified region with that tag. \
+To identify the instances a tag with a specific pattern: `'${REPO_NAME} Github Runner'` is used. \ 
+The action will terminate every running instance in the specified region with that tag. \
 It works perfectly with the runners deployed using [ephemeral-github-runner](https://github.com/pavlovic-ivan/ephemeral-github-runner) (see also the related [github action](https://github.com/LorenzoDrudi/ephemeral-github-runner-action)).  
 
 1. [Prerequisites](#prerequisites)
