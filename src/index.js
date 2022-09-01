@@ -1,6 +1,6 @@
 const core = require('@actions/core');
-const DescribeInstancesCommand = require('@aws-sdk/client-ec2');
-const ec2Client= require('./ec2Client');
+const { DescribeInstancesCommand } = require('@aws-sdk/client-ec2');
+const { ec2Client } = require('./ec2Client');
 
 
 // most @actions toolkit packages have async methods
