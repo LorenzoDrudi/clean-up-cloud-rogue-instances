@@ -12,15 +12,15 @@ async function run() {
       for (const instance of reservation.Instances) {
         const NAME_TAG = REPO_NAME + " Github Runner";
         console.log(NAME_TAG);
-        console.log(instance);
-        console.log(instance.Tags.Name);
-        if (instance.Tags.Name === NAME_TAG) {
-          const ID = instance.InstanceId;
-          console.log(ID);
+        for (const tag of instance.Tags) {
+          console.log(tag.Value);
+          if (tag.Key === 'Name' && tag.Value === NAME_TAG) {
+            const ID = instance.InstanceId;
+            console.log(ID);
+          }
         }
       }
     }
-    console.log("Success", JSON.stringify(data));
   } catch (error) {
     core.setFailed(error.message);
   }
