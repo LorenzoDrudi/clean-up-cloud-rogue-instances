@@ -1,18 +1,13 @@
 const core = require('@actions/core');
-const wait = require('./wait');
+const DescribeInstancesCommand = require('@aws-sdk/client-ec2');
+const ec2Client= require('./ec2Client');
 
 
 // most @actions toolkit packages have async methods
 async function run() {
   try {
-    const ms = core.getInput('milliseconds');
-    core.info(`Waiting ${ms} milliseconds ...`);
-
-    core.debug((new Date()).toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-    await wait(parseInt(ms));
-    core.info((new Date()).toTimeString());
-
-    core.setOutput('time', new Date().toTimeString());
+    const data = await ec2Client.send(new DescribeInstancesCommand({}));
+    console.log("Success", JSON.stringify(data));
   } catch (error) {
     core.setFailed(error.message);
   }

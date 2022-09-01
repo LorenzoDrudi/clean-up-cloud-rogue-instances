@@ -26,7 +26,8 @@
   },
   "homepage": "https://github.com/LorenzoDrudi/clean-up-cloud-rogue-instances/blob/main/README.md#create-a-javascript-action",
   "dependencies": {
-    "@actions/core": "^1.2.5"
+    "@actions/core": "^1.2.5",
+    "@aws-sdk/client-ec2": "^3.161.0"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.31.1",
