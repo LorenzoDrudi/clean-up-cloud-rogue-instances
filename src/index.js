@@ -27,9 +27,9 @@ async function run() {
 
     if (params.InstanceIds.length) {
       await ec2Client.send(new TerminateInstancesCommand(params));
-      core.notice(`Removed Rogue Instances: ${params.InstanceIds.toString()}`);
+      core.notice(`Removed Rogue Instances: ${params.InstanceIds.toString()}.`);
     } else {
-      core.notice(`No Rogue Instances to remove`);
+      core.notice(`No Rogue Instances to remove.`);
     }
   } catch (error) {
     core.setFailed(error.message);
