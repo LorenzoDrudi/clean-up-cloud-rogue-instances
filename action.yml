@@ -9,6 +9,10 @@ inputs:
     description: 'The name of the repo where the runners are linked to'
     required: true
     default: ''
+  aws-region:
+    description: 'AWS region where the instances are located'
+    required: true
+    default: 'eu-west-2'
 runs:
   using: 'node16'
   main: 'dist/index.js'
