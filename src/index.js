@@ -8,13 +8,16 @@ async function run() {
     const REPO_NAME = core.getInput('repo-name');
 
     const data = await ec2Client.send(new DescribeInstancesCommand({}));
-    for (const instance of Object.keys(data.Reservations.Instances)) {
-      const NAME_TAG = REPO_NAME + " Github Runner";
-      console.log(NAME_TAG);
-      console.log(instance.Tags["Name"]);
-      if (instance.Tags["Name"]) {
-        const ID = instance.InstanceId;
-        console.log(ID);
+    console.log()
+    for (const reservation of data.Reservations) {
+      for (const instance of reservation.Instances) {
+        const NAME_TAG = REPO_NAME + " Github Runner";
+        console.log(NAME_TAG);
+        console.log(instance.Tags["Name"]);
+        if (instance.Tags["Name"]) {
+          const ID = instance.InstanceId;
+          console.log(ID);
+        }
       }
     }
     console.log("Success", JSON.stringify(data));
