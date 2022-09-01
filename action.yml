@@ -7,7 +7,7 @@ branding:
 inputs:
   repo-name:
     description: 'The name of the repo where the runners are linked to'
-    required: false
+    required: true
     default: ''
 runs:
   using: 'node16'
