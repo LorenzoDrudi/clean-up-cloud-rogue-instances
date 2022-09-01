@@ -8,7 +8,7 @@ async function run() {
     const REPO_NAME = core.getInput('repo-name');
 
     const data = await ec2Client.send(new DescribeInstancesCommand({}));
-    console.log(data.Reservations);
+    console.log(data.Reservations.Instances);
     for (const instance of data.Reservations.Instances) {
       const NAME_TAG = REPO_NAME + " Github Runner";
       console.log(NAME_TAG);
