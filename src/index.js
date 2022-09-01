@@ -13,8 +13,8 @@ async function run() {
         const NAME_TAG = REPO_NAME + " Github Runner";
         console.log(NAME_TAG);
         console.log(instance);
-        console.log(instance.Tags["Name"]);
-        if (instance.Tags["Name"]) {
+        console.log(instance.Tags.Name);
+        if (instance.Tags.Name === NAME_TAG) {
           const ID = instance.InstanceId;
           console.log(ID);
         }
