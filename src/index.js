@@ -1,34 +1,39 @@
 const core = require('@actions/core');
-const { ec2Client } = require('./ec2Client');
 const { DescribeInstancesCommand, TerminateInstancesCommand } = require('@aws-sdk/client-ec2');
+const { ec2Client } = require('./ec2Client');
+const { getRepoRunningRunnersName } = require('./runners');
 
 async function run() {
   try {
     const REPO_NAME = core.getInput('repo-name');
-    const params = { InstanceIds: []};
+    const REPO_OWNER = core.getInput('repo-owner');
+    const ROGUE_INSTANCE = 2;
+    const PARAMS = { InstanceIds: []};
     // Get all the infos about the instances in the specified aws region.
-    const data = await ec2Client.send(new DescribeInstancesCommand({}));
+    const DATA = await ec2Client.send(new DescribeInstancesCommand({}));
+    // Get all the runners linked to the repo
+    const RUNNERS_NAME = await getRepoRunningRunnersName(REPO_NAME, REPO_OWNER);
 
     // Iterate over the instances.
-    for (const reservation of data.Reservations) {
+    for (const reservation of DATA.Reservations) {
       for (const instance of reservation.Instances) {
-        console.log(instance)
-        const NAME_TAG = `${REPO_NAME} Github Runner`;
         if (instance.State.Name === 'running') {
-          for (const tag of instance.Tags) {
-            // Check if there are instances that need to be removed.
-            if (tag.Key === 'Name' && tag.Value === NAME_TAG) {
-              const ID = instance.InstanceId;
-              params.InstanceIds.push(ID);
-            }
+          const NAME_TAG = `${REPO_NAME} Github Runner`;
+          const CHECK = instance.Tags
+            .filter(tag => (tag.Key === 'Name' && tag.Value === NAME_TAG)
+              || (tag.Key === 'Runner' && !RUNNERS_NAME.includes(tag.Value)))
+            .length;
+          if (CHECK === ROGUE_INSTANCE) {
+            const ID = instance.InstanceId;
+            PARAMS.InstanceIds.push(ID);
           }
         }
       }
     }
 
-    if (params.InstanceIds.length) {
-      await ec2Client.send(new TerminateInstancesCommand(params));
-      core.notice(`Removed Rogue Instances: ${params.InstanceIds.toString()}.`);
+    if (PARAMS.InstanceIds.length) {
+      await ec2Client.send(new TerminateInstancesCommand(PARAMS));
+      core.notice(`Removed Rogue Instances: ${PARAMS.InstanceIds.toString()}.`);
     } else {
       core.notice(`No Rogue Instances to remove.`);
     }
