@@ -26,7 +26,7 @@ It works perfectly with the runners deployed using [ephemeral-github-runner](htt
 
 ## Inputs
 
-Everything below is required. There are no default values provided.
+Everything below is required.
 
 - `repo-name`: The name of the repository for which you want to clean up offline runners.
 - `repo-owner`: The owner of the repository for which you want to clean up offline runners.
