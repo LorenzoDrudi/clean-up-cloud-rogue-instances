@@ -1,116 +1,86 @@
-# Create a JavaScript Action
+# Clean-up-cloud-rogue-instances
 
-<p align="center">
-  <a href="https://github.com/actions/javascript-action/actions"><img alt="javscript-action status" src="https://github.com/actions/javascript-action/workflows/units-test/badge.svg"></a>
-</p>
+[![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/features/actions)
+[![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)](https://en.wikipedia.org/wiki/JavaScript)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Stable Version](https://img.shields.io/github/v/tag/LorenzoDrudi/clean-up-cloud-rogue-instances)](https://img.shields.io/github/v/tag/LorenzoDrudi/clean-up-cloud-rogue-instances)
+[![Latest Release](https://img.shields.io/github/v/release/LorenzoDrudi/clean-up-cloud-rogue-instances?color=%233D9970)](https://img.shields.io/github/v/release/LorenzoDrudi/clean-up-cloud-rogue-instances?color=%233D9970)
 
-Use this template to bootstrap the creation of a JavaScript action.:rocket:
+1. [Prerequisites](#prerequisites)
+2. [Explanation](#inputs)
+3. [How-to-use](#example-usage)
 
-This template includes tests, linting, a validation workflow, publishing, and versioning guidance.
+JavaScript Github Action to clean up AWS running instances (in a specified AWS region) without a Github Runner linked to them. \
+To identify the instances are used two [tags](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html):
 
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
+1. Key: `Name`, Value: `<REPO_NAME> Github Runner'` (insert the name of your repo).
+2. Key: `Runner`, Value: `<Name of the runner linked to the instance` (it's the value used to understand if its linked runner is online, it must be unique!). 
 
-## Create an action from this template
+It works perfectly with the runners deployed using [ephemeral-github-runner](https://github.com/pavlovic-ivan/ephemeral-github-runner) (see also the related [github action](https://github.com/LorenzoDrudi/ephemeral-github-runner-action)).
 
-Click the `Use this Template` and provide the new repo details for your action
+## Prerequisites
 
-## Code in Main
+1. You have a repository where you use self-hosted runners.
+2. You have an AWS account.
+3. You have added secrets to your repository that are later used to set [environment variables](#environment-variables). More information on secrets: [How to set up secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets).
 
-Install the dependencies
+## Inputs
 
-```bash
-npm install
-```
+Everything below is required.
 
-Run the tests :heavy_check_mark:
+- `repo-name`: The name of the repository for which you want to clean up offline runners.
+- `repo-owner`: The owner of the repository for which you want to clean up offline runners.
+- `aws-region`: AWS region where the instances are located, eg. eu-west-2.
 
-```bash
-$ npm test
+## Environment Variables
 
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
-...
-```
+- `APP_ID`: GitHub App ID.
+- `APP_PRIVATE_KEY`: GitHub App Private Key.
+- `AWS_ACCESS_KEY_ID`: Your access key id received when account was created.
+- `AWS_SECRET_ACCESS_KEY`: Your secret access key received when account was created.
 
-## Change action.yml
-
-The action.yml defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-const core = require('@actions/core');
-...
-
-async function run() {
-  try {
-      ...
-  }
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Package for distribution
-
-GitHub Actions will run the entry point from the action.yml. Packaging assembles the code into one file that can be checked in to Git, enabling fast and reliable execution and preventing the need to check in node_modules.
-
-Actions are run from GitHub repos.  Packaging the action will create a packaged action in the dist folder.
-
-Run prepare
-
-```bash
-npm run prepare
-```
-
-Since the packaged index.js is run from the dist folder.
-
-```bash
-git add dist
-```
-
-## Create a release branch
-
-Users shouldn't consume the action from master since that would be latest code and actions can break compatibility between major versions.
-
-Checkin to the v1 release branch
-
-```bash
-git checkout -b v1
-git commit -a -m "v1 release"
-```
-
-```bash
-git push origin v1
-```
-
-Note: We recommend using the `--license` option for ncc, which will create a license file for all of the production node modules used in your project.
-
-Your action is now published! :rocket:
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-
-## Usage
-
-You can now consume the action by referencing the v1 branch
+## Example Usage 
 
 ```yaml
-uses: actions/javascript-action@v1
-with:
-  milliseconds: 1000
+name: clean-up-instances
+on: <event on which the action has to start>
+jobs:
+    manage-runners:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: LorenzoDrudi/clean-up-cloud-rogue-instances@<version to use>
+            env:
+              APP_ID: ${{ secrets.APP_ID }}
+              APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+              AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            with:
+              repo-name: <name of the repository for which you want to clean up offline runners>
+              repo-owner: <owner of the repository for which you want to clean up offline runners>
+              aws-region: <AWS region where the instances are located>
 ```
 
-See the [actions tab](https://github.com/actions/javascript-action/actions) for runs of this action! :rocket:
+All the personal inputs are passed by github secret. 
+[See the docs](https://docs.github.com/en/actions/security-guides/encrypted-secrets).
+
+## Tags and Releases
+
+A github action workflow automatically creates a Tag and a Release every push on the main branch. \
+That's only a good DevOps practice, furthermore the main branch is protected and changes can come only over PR. \
+The idea is to work on develop/features branches and when it's done merge to the main branch, so the workflow starts.
+
+The default behaviour is to create a `minor` tag/release (e.g. 1.*.0), the schema is `<major_version>.<minor_version>.<patch_version>`. \
+It's possible also to create major or patch tags/releases adding a tag at the end of the commit message:
+
+- `#major` -> e.g. *.0.0
+- `#patch` -> e.g. 1.1.*
+
+For more info see the [references](#references).
+
+## References
+
+- Generated from: [JavaScript-Action](https://github.com/actions/javascript-action)
+- To learn how to create a simple action, start here: [Hello-World-JavaScript-Action](https://github.com/actions/hello-world-javascript-action)
+- Recommended documentation: [Creating a JavaScript Action](https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action)
+- Github action used to create a new tag: [github-tag-action](https://github.com/anothrNick/github-tag-action)
+- Github Action used for the release: [action-gh-release](https://github.com/softprops/action-gh-release)
