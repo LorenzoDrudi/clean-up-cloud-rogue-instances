@@ -13,8 +13,8 @@
 JavaScript Github Action to clean up AWS running instances (in a specified AWS region) without a Github Runner linked to them. \
 To identify the instances are used two [tags](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html):
 
-1. Key: `Name`, Value: `<REPO_NAME> Github Runner'` (insert the name of your repo).
-2. Key: `Runner`, Value: `<Name of the runner linked to the instance` (it's the value used to understand if its linked runner is online, it must be unique!). 
+1. Key: `Name`, Value: `<REPO_NAME> Github Runner` (insert the name of your repo).
+2. Key: `Runner`, Value: `<Name of the runner linked to the instance>` (it's the value used to understand if its linked runner is online, it must be unique!). 
 
 It works perfectly with the runners deployed using [ephemeral-github-runner](https://github.com/pavlovic-ivan/ephemeral-github-runner) (see also the related [github action](https://github.com/LorenzoDrudi/ephemeral-github-runner-action)).
 
